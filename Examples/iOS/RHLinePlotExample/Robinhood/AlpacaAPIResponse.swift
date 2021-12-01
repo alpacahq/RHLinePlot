@@ -8,11 +8,11 @@
 
 import Foundation
 
-struct AlpacaAPIResponse: Decodable {
+struct AlpacaAPIResponse: Codable {
     let bars: [Bars]?
 }
 
-struct Bars: Decodable {
+struct Bars: Codable {
     var t: String
     var o: Float
     var h: Float

@@ -7,14 +7,16 @@
 //
 
 import Foundation
+import Combine
 
 struct AlpacaAPI {
     private static let baseURL = URL(string: "https://data.alpaca.markets")!
-    
+    static let networkActivity = PassthroughSubject<Bool, Never>()
+
     let symbol: String
-    let start: String
-    let end: String
     let timeSeriesType: TimeSeriesType
+    let end = "2015-11-10T0:00:00Z"
+    let start = "2020-11-10T0:00:00Z" // Should calculate this later
     
     var urlWithBars: String {
         String("\(AlpacaAPI.baseURL)/v2/stocks/\(symbol)/bars")
@@ -28,6 +30,26 @@ struct AlpacaAPI {
         URL(string: "\(urlWithBars)\(query)")!
     }
     
+    var publisher: AnyPublisher<AlpacaAPIResponse?, Never> {
+        print("URL: \(fullURL)")
+        let jsonDecoder = JSONDecoder()
+        let publiser = URLSession.shared.dataTaskPublisher(for: fullURL)
+            .handleEvents(receiveSubscription: { (_) in
+                Self.networkActivity.send(true)
+            }, receiveCompletion: { (completion) in
+                Self.networkActivity.send(false)
+            }, receiveCancel: {
+                Self.networkActivity.send(false)
+            })
+            .map(\.data)
+            .decode(type: AlpacaAPIResponse?.self, decoder: jsonDecoder)
+            .catch { (err) -> Just<AlpacaAPIResponse?> in
+                print("Catched Error \(err.localizedDescription)")
+                return Just<AlpacaAPIResponse?>(nil)
+        }
+        .eraseToAnyPublisher()
+        return publiser
+    }
 
     func getBars() {
         var request = URLRequest(url: fullURL)

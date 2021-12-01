@@ -9,16 +9,16 @@
 import Combine
 
 class RobinhoodPageBusinessLogic {
-    typealias APIResponse = StockAPIResponse
+    typealias APIResponse = AlpacaAPIResponse
     
     let symbol: String
-    @Published var intradayResponse: APIResponse?
-    @Published var dailyResponse: APIResponse?
-    @Published var weeklyResponse: APIResponse?
-    @Published var monthlyResponse: APIResponse?
+    @Published var intradayResponse: AlpacaAPIResponse?
+    @Published var dailyResponse: AlpacaAPIResponse?
+    @Published var weeklyResponse: AlpacaAPIResponse?
+    @Published var monthlyResponse: AlpacaAPIResponse?
     
-    private static let mapTimeSeriesToResponsePath: [StocksAPI.TimeSeriesType: ReferenceWritableKeyPath<RobinhoodPageBusinessLogic, APIResponse?>] = [
-        .intraday: \.intradayResponse,
+    private static let mapTimeSeriesToResponsePath: [AlpacaAPI.TimeSeriesType: ReferenceWritableKeyPath<RobinhoodPageBusinessLogic, AlpacaAPIResponse?>] = [
+        .hourly: \.intradayResponse,
         .daily: \.dailyResponse,
         .weekly: \.weeklyResponse,
         .monthly: \.monthlyResponse
@@ -30,8 +30,8 @@ class RobinhoodPageBusinessLogic {
         self.symbol = symbol
     }
     
-    func fetch(timeSeriesType: StocksAPI.TimeSeriesType) {
-        StocksAPI(symbol: symbol, timeSeriesType: timeSeriesType).publisher
+    func fetch(timeSeriesType: AlpacaAPI.TimeSeriesType) {
+        AlpacaAPI(symbol: symbol, timeSeriesType: timeSeriesType).publisher
             .assign(to: Self.mapTimeSeriesToResponsePath[timeSeriesType]!, on: self)
             .store(in: &storage)
     }

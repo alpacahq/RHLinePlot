@@ -157,7 +157,7 @@ class RobinhoodPageViewModel: ObservableObject {
     }
     
     func fetchOnAppear() {
-        logic.fetch(timeSeriesType: .intraday)
+        logic.fetch(timeSeriesType: .hourly)
         logic.fetch(timeSeriesType: .daily)
         logic.fetch(timeSeriesType: .weekly)
         logic.fetch(timeSeriesType: .monthly)
