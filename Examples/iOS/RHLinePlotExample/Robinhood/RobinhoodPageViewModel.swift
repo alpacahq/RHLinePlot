@@ -100,7 +100,7 @@ class RobinhoodPageViewModel: ObservableObject {
         let calendar = Calendar.current
         var segments = [Int]()
         
-        let lastStopper = calendar.startOfMonth(for: values.last!.time)
+        let lastStopper = calendar.startOfDay(for: values.last!.time)
 
         
         // Work backward from last day
