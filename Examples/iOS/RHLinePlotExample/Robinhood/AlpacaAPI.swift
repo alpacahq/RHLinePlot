@@ -34,7 +34,11 @@ struct AlpacaAPI {
         let jsonDecoder = JSONDecoder()
         let url = self.fullURL
         print("URL: \(url)")
-        let publiser = URLSession.shared.dataTaskPublisher(for: url)
+        var request = URLRequest(url: self.fullURL)
+        request.httpMethod = "GET"
+        request.addValue("PK5KK5IJJN3Z1UVFO86F", forHTTPHeaderField: "APCA-API-KEY-ID")
+        request.addValue("hnVv9OrxIjrtOiVSCuCFh61bFj1QoNS80h76Hofz", forHTTPHeaderField: "APCA-API-SECRET-KEY")
+        let publiser = URLSession.shared.dataTaskPublisher(for: request)
             .handleEvents(receiveSubscription: { (_) in
                 Self.networkActivity.send(true)
             }, receiveCompletion: { (completion) in
