@@ -7,10 +7,12 @@
 //
 
 import Foundation
+import Combine
 
 struct AlpacaAPI {
     private static let baseURL = URL(string: "https://data.alpaca.markets")!
-    
+    static let networkActivity = PassthroughSubject<Bool, Never>()
+
     let symbol: String
     let start: String
     let end: String
@@ -29,34 +31,31 @@ struct AlpacaAPI {
     }
     
 
-    func getBars() {
-        var request = URLRequest(url: fullURL)
-        request.httpMethod = "GET"
-        request.addValue("PK5KK5IJJN3Z1UVFO86F", forHTTPHeaderField: "APCA-API-KEY-ID")
-        request.addValue("hnVv9OrxIjrtOiVSCuCFh61bFj1QoNS80h76Hofz", forHTTPHeaderField: "APCA-API-SECRET-KEY")
-        
-        //Perform request
-        let session = URLSession(configuration: .default)
-        let task = session.dataTask(with: request) { (data, response, error) in
-            if error != nil {
-                print(error!)
-                return
-            }
-            if let safeData = data {
-                self.parseJSON(barData: safeData)
-            }
-        }
-        task.resume()
-    }
+//    private var jsonDecoder: JSONDecoder {
+//        let d = JSONDecoder()
+//        return d
+//    }
     
-    func parseJSON(barData: Data){
-        let decoder = JSONDecoder()
-        do {
-            let decodedData = try decoder.decode(AlpacaAPIResponse.self, from: barData)
-            print(decodedData)
-        } catch {
-            print(error)
+    var publisher: AnyPublisher<AlpacaAPIResponse?, Never> {
+        let jsonDecoder = JSONDecoder()
+        let url = self.fullURL
+        print("URL: \(url)")
+        let publiser = URLSession.shared.dataTaskPublisher(for: url)
+            .handleEvents(receiveSubscription: { (_) in
+                Self.networkActivity.send(true)
+            }, receiveCompletion: { (completion) in
+                Self.networkActivity.send(false)
+            }, receiveCancel: {
+                Self.networkActivity.send(false)
+            })
+            .map(\.data)
+            .decode(type: AlpacaAPIResponse?.self, decoder: jsonDecoder)
+            .catch { (err) -> Just<AlpacaAPIResponse?> in
+                print("Catched Error \(err.localizedDescription)")
+                return Just<AlpacaAPIResponse?>(nil)
         }
+        .eraseToAnyPublisher()
+        return publiser
     }
     
     

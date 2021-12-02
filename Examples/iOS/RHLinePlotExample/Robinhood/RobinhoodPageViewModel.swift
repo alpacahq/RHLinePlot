@@ -15,12 +15,12 @@ class RobinhoodPageViewModel: ObservableObject {
     private let logic: RobinhoodPageBusinessLogic
     
     @Published var isLoading = false
-    @Published var intradayPlotData: PlotData?
+    @Published var hourlyPlotData: PlotData?
     @Published var dailyPlotData: PlotData?
     @Published var weeklyPlotData: PlotData?
     @Published var monthlyPlotData: PlotData?
     
-    // For displaying segments 
+    // For displaying segments
     var segmentsDataCache: [TimeDisplayOption: [Int]] = [:]
     
     let symbol: String
@@ -37,14 +37,14 @@ class RobinhoodPageViewModel: ObservableObject {
             .store(in: &storage)
         
         let publishers = [
-            logic.$intradayResponse,
+            logic.$hourlyResponse,
             logic.$dailyResponse,
             logic.$weeklyResponse,
             logic.$monthlyResponse
         ]
         
         let assignees: [ReferenceWritableKeyPath<RobinhoodPageViewModel, PlotData?>] = [
-            \.intradayPlotData,
+            \.hourlyPlotData,
             \.dailyPlotData,
             \.weeklyPlotData,
             \.monthlyPlotData
@@ -157,7 +157,7 @@ class RobinhoodPageViewModel: ObservableObject {
     }
     
     func fetchOnAppear() {
-        logic.fetch(timeSeriesType: .intraday)
+        logic.fetch(timeSeriesType: .hourly)
         logic.fetch(timeSeriesType: .daily)
         logic.fetch(timeSeriesType: .weekly)
         logic.fetch(timeSeriesType: .monthly)

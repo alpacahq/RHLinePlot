@@ -8,6 +8,8 @@
 
 import Foundation
 
+// Alpaca stock info here? necessary?
+
 struct AlpacaAPIResponse: Decodable {
     let bars: [Bars]?
 }

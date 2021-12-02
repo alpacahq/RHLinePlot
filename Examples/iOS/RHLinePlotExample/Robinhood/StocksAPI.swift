@@ -23,7 +23,7 @@ struct StocksAPI {
     
     private var query: String {
         switch timeSeriesType {
-        case .intraday:
+        case .hourly:
             return "function=\(timeSeriesType.function)&symbol=\(symbol)&interval=5min&apikey=\(apiKey)"
         default:
             return "function=\(timeSeriesType.function)&symbol=\(symbol)&apikey=\(apiKey)"
@@ -60,14 +60,14 @@ struct StocksAPI {
 
 extension StocksAPI {
     enum TimeSeriesType {
-        case intraday
+        case hourly
         case daily
         case weekly
         case monthly
         
         var dateFormat: String {
             switch self {
-            case .intraday:
+            case .hourly:
                 return "yyyy-MM-dd HH:mm:ss"
             case .daily:
                 return "yyyy-MM-dd"
@@ -80,7 +80,7 @@ extension StocksAPI {
         
         var function: String {
             switch self {
-            case .intraday:
+            case .hourly:
                 return "TIME_SERIES_INTRADAY"
             case .daily:
                 return "TIME_SERIES_DAILY"

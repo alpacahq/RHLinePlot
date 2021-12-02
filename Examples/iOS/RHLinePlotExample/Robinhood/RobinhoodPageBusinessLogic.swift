@@ -12,13 +12,13 @@ class RobinhoodPageBusinessLogic {
     typealias APIResponse = StockAPIResponse
     
     let symbol: String
-    @Published var intradayResponse: APIResponse?
+    @Published var hourlyResponse: APIResponse?
     @Published var dailyResponse: APIResponse?
     @Published var weeklyResponse: APIResponse?
     @Published var monthlyResponse: APIResponse?
     
     private static let mapTimeSeriesToResponsePath: [StocksAPI.TimeSeriesType: ReferenceWritableKeyPath<RobinhoodPageBusinessLogic, APIResponse?>] = [
-        .intraday: \.intradayResponse,
+        .hourly: \.hourlyResponse,
         .daily: \.dailyResponse,
         .weekly: \.weeklyResponse,
         .monthly: \.monthlyResponse
