@@ -22,7 +22,7 @@ struct RobinhoodPage: View {
     var currentPlotData: PlotData? {
         switch timeDisplayMode {
         case .hourly:
-            return viewModel.intradayPlotData
+            return viewModel.hourlyPlotData
         case .daily:
             return viewModel.dailyPlotData
         case .weekly:
