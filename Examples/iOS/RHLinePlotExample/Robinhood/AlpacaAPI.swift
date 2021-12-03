@@ -15,9 +15,31 @@ struct AlpacaAPI {
 
     let symbol: String
     let timeSeriesType: TimeSeriesType
-    let start = "2018-01-01T0:00:00Z" // Should calculate this later
-    let end = "2021-11-26T0:00:00Z"
     
+    var start: String {
+        let hourlyOffset = -3
+        let dailyOffset = -1
+        let weeklyOffset = -6
+        let monthlyOffset = -5
+        switch timeSeriesType.timeframe {
+        case "1Hour":
+            return (Calendar.current.date(byAdding: .day, value: hourlyOffset, to: Date())?.iso8601)!
+        case "1Day":
+            return (Calendar.current.date(byAdding: .month, value: dailyOffset, to: Date())?.iso8601)!
+        case "5Day":
+            return (Calendar.current.date(byAdding: .month, value: weeklyOffset, to: Date())?.iso8601)!
+        case "21Day":
+            return (Calendar.current.date(byAdding: .year, value: monthlyOffset, to: Date())?.iso8601)!
+        default:
+            return (Calendar.current.date(byAdding: .year, value: monthlyOffset, to: Date())?.iso8601)!
+        }
+    }
+    
+    var end: String {
+        let dataDelay = -16 // Alpaca free plan delays data by 15 minutes
+        return (Calendar.current.date(byAdding: .minute, value: dataDelay, to: Date())?.iso8601)!
+    }
+
     var urlWithBars: String {
         String("\(AlpacaAPI.baseURL)/v2/stocks/\(symbol)/bars")
     }
@@ -75,7 +97,7 @@ extension AlpacaAPI {
             case .weekly:
                 return "5Day"
             case .monthly:
-                return "20Day"
+                return "21Day"
             }
         }
     }

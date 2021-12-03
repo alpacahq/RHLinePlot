@@ -72,3 +72,21 @@ extension CGFloat {
         String(format: "%.2f", self)
     }
 }
+
+extension ISO8601DateFormatter {
+    convenience init(_ formatOptions: Options) {
+        self.init()
+        self.formatOptions = formatOptions
+    }
+}
+extension Formatter {
+    static let iso8601 = ISO8601DateFormatter([.withInternetDateTime])
+}
+
+extension Date {
+    var iso8601: String { return Formatter.iso8601.string(from: self) }
+}
+
+extension String {
+    var iso8601: Date? { return Formatter.iso8601.date(from: self) }
+}

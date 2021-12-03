@@ -10,7 +10,6 @@ import Combine
 import SwiftUI
 
 class RobinhoodPageViewModel: ObservableObject {
-    typealias PlotData = [(time: Date, price: CGFloat)]
     typealias AlpacaPlotData = [(time: Date, price: CGFloat)]
     
     private let logic: RobinhoodPageBusinessLogic
@@ -85,11 +84,9 @@ class RobinhoodPageViewModel: ObservableObject {
         let dateFormatter = DateFormatter()
         dateFormatter.locale = Locale(identifier: "en_US_POSIX") // set locale to reliable US_POSIX
         dateFormatter.dateFormat = "yyyy-MM-dd'T'HH:mm:ss'Z'"
-        let date = dateFormatter.date(from:isoDate)!
-        print(date)
-
-        let components = Calendar.current.dateComponents([.year, .month, .day, .hour, .minute], from: date)
         
+        let date = dateFormatter.date(from:isoDate)!
+        let components = Calendar.current.dateComponents([.year, .month, .day, .hour, .minute], from: date)
         let finalDate = Calendar.current.date(from:components)
         
         return finalDate!
@@ -167,10 +164,6 @@ class RobinhoodPageViewModel: ObservableObject {
             }
         }
         return segments
-    }
-    
-    private func mapToPlotData(_ response: StockAPIResponse?) -> PlotData? {
-        response?.timeSeries.map { tup in (tup.time, CGFloat(tup.info.closePrice)) }
     }
     
     private func mapAlpacaToPlotData(_ response: AlpacaAPIResponse?) -> AlpacaPlotData? {

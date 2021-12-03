@@ -11,8 +11,8 @@ import SwiftUI
 import RHLinePlot
 
 struct RobinhoodPage: View {
-    typealias PlotData = RobinhoodPageViewModel.PlotData
-    static let symbol = "IBM"
+    typealias PlotData = RobinhoodPageViewModel.AlpacaPlotData
+    static let symbol = "GOOG"
     
     @State var timeDisplayMode: TimeDisplayOption = .hourly
     @State var isLaserModeOn = false

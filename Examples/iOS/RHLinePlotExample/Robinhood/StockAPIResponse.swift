@@ -12,9 +12,9 @@ struct StockStatsInfo: Decodable {
     enum CodingKeys: String, CodingKey {
         case closePrice = "4. close"
     }
-    
+
     let closePrice: Float
-    
+
     init(from decoder: Decoder) throws {
         let container = try decoder.container(keyedBy: CodingKeys.self)
         guard let close = Float(try container.decode(String.self, forKey: .closePrice)) else {
@@ -25,17 +25,17 @@ struct StockStatsInfo: Decodable {
 }
 
 struct StockAPIResponse: Decodable {
-    
+
     let symbol: String
     let timeSeries: [(time: Date, info: StockStatsInfo)]
-    
+
     private struct PhantomKey: CodingKey {
         var intValue: Int?
         var stringValue: String
         init?(intValue: Int) { self.intValue = intValue; self.stringValue = "\(intValue)" }
         init?(stringValue: String) { self.stringValue = stringValue }
     }
-    
+
     private enum MetaDataKeys: String, CodingKey {
         case symbol = "2. Symbol"
     }
@@ -55,7 +55,7 @@ struct StockAPIResponse: Decodable {
 
         let dateFormatter = DateFormatter()
         dateFormatter.timeZone = TimeZone(abbreviation: "EST")
-        
+
         let dateFormat = decoder.userInfo[CodingUserInfoKey(rawValue: "dateFormat")!] as! String
         dateFormatter.dateFormat = dateFormat
         for key in container.allKeys {
@@ -66,7 +66,7 @@ struct StockAPIResponse: Decodable {
         self.timeSeries = entities.sorted(by: { (v1, v2) -> Bool in
             v1.time < v2.time
         })
-        
+
         // Symbol
         let symbolKey = PhantomKey(stringValue: "Meta Data")!
         let metaDataContainer = try root.nestedContainer(keyedBy: MetaDataKeys.self, forKey: symbolKey)
