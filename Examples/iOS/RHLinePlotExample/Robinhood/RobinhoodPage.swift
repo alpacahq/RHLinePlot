@@ -11,8 +11,8 @@ import SwiftUI
 import RHLinePlot
 
 struct RobinhoodPage: View {
-    typealias PlotData = RobinhoodPageViewModel.PlotData
-    static let symbol = "IBM"
+    typealias PlotData = RobinhoodPageViewModel.AlpacaPlotData
+    static let symbol = "GOOG"
     
     @State var timeDisplayMode: TimeDisplayOption = .hourly
     @State var isLaserModeOn = false
@@ -22,7 +22,7 @@ struct RobinhoodPage: View {
     var currentPlotData: PlotData? {
         switch timeDisplayMode {
         case .hourly:
-            return viewModel.intradayPlotData
+            return viewModel.hourlyPlotData
         case .daily:
             return viewModel.dailyPlotData
         case .weekly:

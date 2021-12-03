@@ -12,30 +12,30 @@ import Combine
 struct StocksAPI {
     private static let baseURL = URL(string: "https://www.alphavantage.co/query?")!
     static let networkActivity = PassthroughSubject<Bool, Never>()
-        
+
     let symbol: String
     let timeSeriesType: TimeSeriesType
     var apiKey = "demo"
-    
+
     var fullURL: URL {
         URL(string: "\(Self.baseURL)\(query)")!
     }
-    
+
     private var query: String {
         switch timeSeriesType {
-        case .intraday:
+        case .hourly:
             return "function=\(timeSeriesType.function)&symbol=\(symbol)&interval=5min&apikey=\(apiKey)"
         default:
             return "function=\(timeSeriesType.function)&symbol=\(symbol)&apikey=\(apiKey)"
         }
     }
-    
+
     private var jsonDecoder: JSONDecoder {
         let d = JSONDecoder()
         d.userInfo[CodingUserInfoKey(rawValue: "dateFormat")!] = timeSeriesType.dateFormat
         return d
     }
-    
+
     var publisher: AnyPublisher<StockAPIResponse?, Never> {
         let url = self.fullURL
         print("URL: \(url)")
@@ -60,14 +60,14 @@ struct StocksAPI {
 
 extension StocksAPI {
     enum TimeSeriesType {
-        case intraday
+        case hourly
         case daily
         case weekly
         case monthly
-        
+
         var dateFormat: String {
             switch self {
-            case .intraday:
+            case .hourly:
                 return "yyyy-MM-dd HH:mm:ss"
             case .daily:
                 return "yyyy-MM-dd"
@@ -77,10 +77,10 @@ extension StocksAPI {
                 return "yyyy-MM-dd"
             }
         }
-        
+
         var function: String {
             switch self {
-            case .intraday:
+            case .hourly:
                 return "TIME_SERIES_INTRADAY"
             case .daily:
                 return "TIME_SERIES_DAILY"
