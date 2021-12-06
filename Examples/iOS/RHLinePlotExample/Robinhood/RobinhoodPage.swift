@@ -12,7 +12,7 @@ import RHLinePlot
 
 struct RobinhoodPage: View {
     typealias PlotData = RobinhoodPageViewModel.AlpacaPlotData
-    static let symbol = "GOOG"
+    static let symbol = "SPY"
     
     @State var timeDisplayMode: TimeDisplayOption = .hourly
     @State var isLaserModeOn = false
