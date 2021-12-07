@@ -45,7 +45,7 @@ struct AlpacaAPI {
     }
     
     private var query: String {
-        return "?start=\(start)&end=\(end)&timeframe=\(timeSeriesType.timeframe)"
+        String("?start=\(start)&end=\(end)&timeframe=\(timeSeriesType.timeframe)")
     }
     
     var fullURL: URL {
