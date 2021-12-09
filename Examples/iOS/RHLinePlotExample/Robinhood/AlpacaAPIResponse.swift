@@ -18,5 +18,5 @@ struct Bar: Codable {
     var h: Float
     var l: Float
     var c: Float
-    var v: Float
+    var v: Int
 }

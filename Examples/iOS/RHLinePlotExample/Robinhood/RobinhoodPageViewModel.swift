@@ -87,10 +87,12 @@ class RobinhoodPageViewModel: ObservableObject {
         
         let date = dateFormatter.date(from:isoDate)!
         let components = Calendar.current.dateComponents([.year, .month, .day, .hour, .minute], from: date)
-        let finalDate = Calendar.current.date(from:components)
+        let finalDate = (Calendar.current.date(from:components))!
         
-        return finalDate!
-        
+        // Find the offset of current timezone relative to GMT, return local date-time
+        let timezone = TimeZone.current
+        let seconds = Int(TimeInterval(timezone.secondsFromGMT(for: finalDate)))
+        return (Calendar.current.date(byAdding: .second, value: seconds, to: finalDate)!)
     }
     
     static func segmentByHours(values: AlpacaPlotData) -> [Int] {

@@ -17,13 +17,12 @@ struct AlpacaAPI {
     let timeSeriesType: TimeSeriesType
     
     var start: String {
-        let hourlyOffset = -1
         let dailyOffset = -5
         let weeklyOffset = -3
         let monthlyOffset = -5
         switch timeSeriesType.timeframe {
         case "5Min":
-            return (Calendar.current.date(byAdding: .day, value: hourlyOffset, to: Date())?.iso8601)!
+            return (Calendar.current.date(bySettingHour: 7, minute: 30, second: 0, of: Date())?.iso8601)!
         case "1Day":
             return (Calendar.current.date(byAdding: .month, value: dailyOffset, to: Date())?.iso8601)!
         case "5Day":
